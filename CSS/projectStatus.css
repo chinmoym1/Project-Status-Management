@@ -1,0 +1,996 @@
+:root {
+    --primary: #6d5d7e;
+    --accent: #aa97b9;
+    --bg: #f8f9fa;
+    --white: #ffffff;
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+  }
+  body {
+    background: var(--bg);
+    overflow-x: hidden;
+  }
+  .hidden {
+    display: none !important;
+  }
+  
+  /* Layout & Sidebar */
+  .app-container {
+    display: flex;
+    min-height: 100vh;
+  }
+  /* Instruction Banner */
+  #dashboard-instruction {
+    background-color: #e3f2fd; /* Light Blue Background */
+    color: #0d47a1; /* Dark Blue Text */
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+    border: 1px solid #bbdefb;
+    /* By default, we keep it hidden in CSS so JS can show it only when needed */
+    display: none;
+  }
+  
+  .side-nav {
+    width: 240px;
+    background: var(--primary);
+    color: white;
+    padding: 30px;
+    flex-shrink: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .side-nav h2 {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  .side-nav ul {
+    list-style: none;
+  }
+  .side-nav li a {
+    color: #ddd;
+    text-decoration: none;
+    padding: 12px;
+    display: block;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: 0.3s;
+  }
+  .side-nav li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  
+  .content-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    overflow: hidden;
+  }
+  
+  /* Main Header Container */
+  .dashboard-header-container {
+      display: flex; 
+      justify-content: space-between; /* Pushes text left, button right */
+      align-items: flex-end; /* Aligns bottom of text with button */
+      padding: 20px 10px;
+      margin-bottom: 25px; /* Adds space before the list starts */
+      border-bottom: 1px solid #eee; /* Subtle separator line */
+  }
+  
+  /* Grouping Title and Subtitle */
+  .header-text-group {
+      display: flex; 
+      flex-direction: column;
+      gap: 5px;
+  }
+  
+  /* Title Styling */
+  .header-text-group h1 {
+      font-size: 1.8rem;
+      color: #2c3e50;
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.5px; /* Tighter, modern look */
+  }
+  
+  /* Subtitle (Instruction) Styling */
+  .header-subtitle {
+      font-size: 0.95rem;
+      color: #7f8c8d; /* Professional Grey */
+      margin: 0;
+      font-weight: 400;
+  }
+  
+  /* New Button Styling */
+  .btn-primary-large {
+      background-color: #6d5d7e; /* Your primary color */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      border-radius: 8px; 
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(109, 93, 126, 0.2); 
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; 
+      align-items: center;
+      gap: 8px;
+  }
+  
+  .btn-primary-large:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(109, 93, 126, 0.3); 
+      background-color: #5a4b6b;
+  }
+  /* Toolbar Group */
+  .toolbar-actions {
+      display: flex;
+      gap: 10px;
+  }
+  
+  /* Styled Dropdowns */
+  .toolbar-actions select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: white;
+      color: #555;
+      font-size: 0.9rem;
+      cursor: pointer;
+      outline: none;
+      transition: border 0.2s;
+  }
+  
+  .toolbar-actions select:hover {
+      border-color: #aaa;
+  }
+  
+  .toolbar-actions select:focus {
+      border-color: var(--primary);
+  }
+  
+  /* Dashboard Cards */
+  .project-grid {
+    display: flex; 
+    flex-direction: column; /* Stack vertically */
+    gap: 10px;
+  }
+  /* Individual Project Row */
+  .project-list-row {
+    display: grid; 
+    grid-template-columns: 1fr auto auto; /* Name | Details | Delete */
+    align-items: center;
+    background: white; 
+    padding: 15px 20px;
+    border-radius: 8px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); 
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  
+  .project-list-row:hover {
+    transform: translateX(5px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+  }
+  
+  /* Project Name */
+  .project-list-row h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  /* Project Details (Stats) */
+  .project-details {
+    color: #666;
+    font-size: 0.9rem;
+    margin-right: 20px;
+  }
+  /* Delete Button (Right Side) */
+  .btn-delete-row {
+    background: transparent; 
+    border: none;
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px; 
+    transition: color 0.2s, background 0.2s;
+  }
+  
+  .btn-delete-row:hover {
+    color: #ff4d4d;
+    background: #fff0f0;
+  }
+  .project-card {
+    position: relative;
+    background: white;
+    padding: 40px 25px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    border-top: 5px solid var(--accent);
+    transition: 0.2s;
+  }
+  .project-card:hover {
+    transform: translateY(-5px);
+  }
+  .delete-project-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #ccc;
+    cursor: pointer;
+  }
+  .delete-project-btn:hover {
+    color: #ff4d4d;
+  }
+  /* Editable Project Title */
+  #active-project-title {
+    cursor: pointer;
+    border-bottom: 1px dashed transparent; /* Visual hint */
+    transition: all 0.2s ease;
+    padding-bottom: 2px;
+  }
+  
+  /* Container for the list */
+  .project-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      min-height: 200px; /* Gives space for the empty message */
+  }
+  
+  /* The Professional Project Row */
+  .project-row {
+    display: grid;
+    grid-template-columns: 4fr 3fr 2fr 1fr; /* Name | Progress | Date | Actions */
+    align-items: center;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .project-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+    border-color: #e0e0e0;
+  }
+  
+  /* 1. Project Info Section */
+  .row-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  .row-desc {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0;
+  }
+  
+  /* 2. Progress Bar Section */
+  .row-progress {
+    padding: 0 20px;
+  }
+  
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6d5d7e, #8e7dbe); /* Gradient Purple */
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  
+  /* 3. Meta Data (Date) */
+  .row-meta {
+    font-size: 0.85rem;
+    color: #999;
+    text-align: right;
+  }
+  
+  /* 4. Actions */
+  .row-actions {
+    text-align: right;
+  }
+  
+  .btn-delete-icon {
+    background: transparent;
+    border: none;
+    color: #ddd;
+    font-size: 1.2rem;
+    padding: 5px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .btn-delete-icon:hover {
+    color: #ff4d4d;
+  }
+  
+  /* The Input Box that replaces the Title */
+  .project-title-input {
+    font-size: 1.5rem; /* Match the h2 size */
+    font-weight: bold;
+    color: #333;
+    border: none;
+    border-bottom: 2px solid var(--primary);
+    outline: none;
+    background: transparent;
+    width: auto;
+    min-width: 300px;
+  }
+  
+  #active-project-title:hover {
+    color: var(--primary);
+    border-bottom-color: #ccc; /* Shows line on hover */
+  }
+  
+  /* Layout for Title area */
+  .header-left-group {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between arrow and title */
+  }
+  
+  /* Close/Back Button Styling */
+  .btn-close-project {
+    background: transparent; 
+    border: none;
+    font-size: 1.8rem;
+    color: #888;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 50%; 
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+  }
+  
+  .btn-close-project:hover {
+    background: #eee;
+    color: #333;
+  }
+  
+  /* Board UI */
+  .board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+  }
+  .kanban-board {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    /* overflow-y: hidden; */
+    padding-bottom: 20px;
+    align-items: flex-start;
+    width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: #aa97b9 #f0f2f5;
+  }
+  /* Custom scrollbar styling for Chrome/Safari/Edge */
+  .kanban-board::-webkit-scrollbar {
+    height: 8px;
+  }
+  .kanban-board::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  .kanban-board::-webkit-scrollbar-thumb {
+    background: #aa97b9;
+    border-radius: 10px;
+  }
+  .status-column {
+    background: #ebedef;
+    min-width: 250px; /* IMPORTANT: Prevents stages from squashing */
+    max-width: 320px;
+    padding: 20px;
+    border-radius: 15px;
+    min-height: 80vh;
+    flex-shrink: 0; /* IMPORTANT: Tells flexbox NOT to shrink the column */
+    display: flex;
+    flex-direction: column;
+    cursor: default; /* Headers will handle the drag handle */
+    user-select: none;
+    transition: transform 0.2s, opacity 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-column h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #555;
+    /* text-transform: uppercase; */
+    font-size: 0.9rem;
+  }
+  .status-column.dragging-col {
+    opacity: 0.4;
+    border: none;
+    transform: scale(0.98);
+    box-shadow: none;
+  }
+  
+  /* Column Header Layout */
+  .column-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+  }
+  .column-header {
+    cursor: text;
+    transition: background 0.2s;
+    border-radius: 4px;
+    padding: 2px 5px;
+  }
+  .column-header:hover {
+    background: rgba(0, 0, 0, 0.05); /* Subtle hover effect */
+  }
+  .column-header-text {
+    cursor: grab;
+    padding: 10px;
+    display: block;
+    width: 100%;
+  }
+  
+  .column-header-text:active {
+    cursor: grabbing;
+  }
+  
+  /* Inline Edit Input */
+  .stage-name-input {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    background: white;
+    border: 2px solid #6d5d7e; /* Primary color border */
+    border-radius: 4px;
+    padding: 5px;
+    width: 80%; /* Takes up most of the header space */
+    outline: none;
+  }
+  .stage-delete-btn {
+    color: #ccc;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 5px;
+    transition: color 0.2s;
+  }
+  .stage-delete-btn:hover {
+    color: #ff4d4d;
+  }
+  /* "Add Stage" Button Column */
+  .add-stage-column {
+    min-width: 80px; /* Minimal width to hold the icon */
+    max-width: 80px;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: flex-start; /* Align to top (match headers) */
+    padding-top: 15px; /* Align with the text of other headers */
+    background: transparent; /* No background */
+    border: none; /* No border */
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  
+  .add-stage-column:hover .add-stage-btn {
+    transform: scale(1.2) rotate(90deg); /* Nice interaction effect */
+    color: #aa97b9;
+  }
+  .add-stage-btn {
+    font-size: 3.5rem; /* Large, visible icon */
+    color: #6d5d7e; /* Primary color */
+    font-weight: 300; /* Thinner, modern look */
+    line-height: 0.6; /* Fix vertical alignment */
+    transition: transform 0.2s, color 0.2s;
+    user-select: none;
+  }
+  /* Container for the inline input form */
+  .add-stage-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    cursor: default; /* Don't show pointer cursor here */
+  }
+  /* The Input Box */
+  .new-stage-input {
+    width: 140px; /* Wider than the column to fit text */
+    padding: 8px;
+    border: 2px solid var(--primary); 
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  /* Specific styling for the smaller Stage Modal */
+  .stage-modal-content {
+    width: 350px;
+    text-align: center;
+  }
+  
+  .stage-modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--primary); 
+  }
+  
+  .stage-modal-content input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px; 
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+  
+  .stage-modal-content input:focus {
+    border-color: var(--primary); 
+    outline: none;
+  }
+  
+  /* Search Bar Styling */
+  .search-container {
+    flex-grow: 0;
+    display: flex;
+    justify-content: center;
+    margin: 0 15px;
+  }
+  
+  /* Modal Inputs Layout */
+  .task-meta-inputs {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .input-group label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .input-group input,
+  .input-group select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+  
+  /* --- TASK TAGS --- */
+  #task-tags {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+  
+  .tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+    margin-bottom: 5px;
+  }
+  
+  .task-tag {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    background-color: #e3f2fd; /* Light Blue */
+    color: #1565c0;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  
+  /* Special Colors */
+  .task-tag.bug { background-color: #ffebee; color: #c62828; }    /* Red */
+  .task-tag.feature { background-color: #f3e5f5; color: #7b1fa2; } /* Purple */
+  .task-tag.urgent { background-color: #fff8e1; color: #ff8f00; }  /* Orange */
+  
+  /* A rewarding green background for the final stage */
+  .status-column.completed-column {
+    background: linear-gradient(to bottom, #f1f8e9, #ffffff);
+    border-top: 3px solid #66bb6a; /* Green Line on top */
+  }
+  
+  .status-column.completed-column .column-header {
+    color: #2e7d32;
+  }
+  
+  /* Card Badges (The visuals on the board) */
+  .task-badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 0.75rem;
+  }
+  
+  .badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  /* Priority Colors */
+  .badge-priority.High {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+  }
+  .badge-priority.Medium {
+    background: #fff3e0;
+    color: #ef6c00;
+    border: 1px solid #ffe0b2;
+  }
+  .badge-priority.Low {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+  }
+  
+  /* Date Color (Red if overdue logic can be added later) */
+  .badge-date {
+    background: #f5f5f5;
+    color: #555;
+    border: 1px solid #ddd;
+  }
+  
+  #task-search-input {
+    width: 200px; /* shorter default width */
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: width 0.3s ease, border-color 0.2s; /* Smooth expand effect */
+    font-size: 0.9rem;
+  }
+  
+  #task-search-input:focus {
+    width: 280px;
+    border-color: #6d5d7e; /* Primary color */
+    box-shadow: 0 0 5px rgba(109, 93, 126, 0.3);
+  }
+  
+  /* Column Header Limit Styling */
+  .column-limit-display {
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: 8px;
+    background: #e0e0e0;
+    padding: 2px 6px;
+    border-radius: 10px; 
+    cursor: pointer;
+  }
+  
+  /* Visual warning when limit is reached */
+  .status-column.limit-reached {
+    border: 2px solid #ff4d4d; 
+    background: #fff0f0;
+  }
+  
+  .status-column.limit-reached .column-header {
+    color: #d32f2f; 
+  }
+  
+  /* Blur Effect for the Background Overlay */
+  .modal {
+    z-index: 2000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Button Group (Save / Cancel) */
+  .stage-btn-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn-icon-sm {
+    background: white; 
+    border: 1px solid #ddd;
+    border-radius: 4px; 
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  
+  .btn-confirm {
+    color: green;
+    border-color: green;
+  }
+  .btn-confirm:hover {
+    background: #eaffea;
+  }
+  
+  .btn-cancel-sm {
+    color: red;
+    border-color: red;
+  }
+  .btn-cancel-sm:hover {
+    background: #ffeaea;
+  }
+  
+  /* Task Styling & Dragging */
+  .drop-zone {
+    min-height: 400px;
+    border-radius: 10px;
+    transition: 0.2s;
+  }
+  .drop-zone.drag-over {
+    background: rgba(109, 93, 126, 0.1);
+    border: 2px dashed var(--primary);
+  }
+  .task-item {
+    position: relative;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    cursor: grab;
+    border-left: 5px solid var(--primary);
+    transition: background 0.2s;
+  }
+  .task-item:hover {
+    background: #fafafa;
+  }
+  .task-delete-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    color: #bbb;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .task-delete-btn:hover {
+    color: #ff4d4d;
+  }
+  
+  /* Modal Design */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    pointer-events: auto;
+  }
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 450px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .modal-body input,
+  .modal-body textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  .modal-body textarea {
+    height: 100px;
+    resize: none;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  /* Buttons */
+  .btn-primary,
+  .btn-add,
+  .btn-save {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .btn-cancel {
+    background: #eee;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .btn-primary:hover,
+  .btn-add:hover {
+    background: var(--accent);
+  }
+  
+  /* Center the setup view within the content area */
+  #setup-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 80vh;
+  }
+  
+  .setup-container {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+  }
+  
+  /* Ensure inputs take up full width of the container */
+  .input-group {
+    margin-bottom: 25px;
+    text-align: left;
+  }
+  
+  .input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--primary);
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  .btn-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .btn-primary:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+  }
+  
+  /* --- RESPONSIVE MEDIA QUERIES --- */
+  
+  /* For Tablets and smaller screens (under 1024px) */
+  @media (max-width: 1024px) {
+    .app-container {
+      flex-direction: column; /* Stack sidebar on top of content */
+    }
+  
+    .side-nav {
+      width: 100%; /* Sidebar takes full width */
+      padding: 20px;
+      height: auto;
+    }
+  
+    .side-nav h2 {
+      margin-bottom: 15px;
+    }
+  
+    .side-nav ul {
+      display: flex; /* Horizontal nav for mobile */
+      justify-content: center;
+      gap: 20px;
+    }
+  
+    .content-area {
+      padding: 20px;
+    }
+  }
+  
+  /* For Mobile Phones (under 600px) */
+  @media (max-width: 600px) {
+    .view-header h1 {
+      font-size: 1.5rem;
+    }
+  
+    /* Stack project cards in a single column */
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    /* Make Kanban columns stack or remain scrollable with more padding */
+    .kanban-board {
+      padding-bottom: 40px;
+    }
+  
+    .status-column {
+      min-width: 85vw; /* Columns take up most of the screen width */
+    }
+  
+    .board-header {
+      flex-direction: column; /* Header title and button stack */
+      gap: 15px;
+      text-align: center;
+    }
+  
+    /* Modal adjustments for small screens */
+    .modal-content {
+      width: 90%;
+      padding: 20px;
+    }
+  }
+  

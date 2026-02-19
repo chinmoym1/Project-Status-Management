@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProManager | Project Status Suite</title>
+    <link rel="stylesheet" href="../CSS/projectStatus.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <nav class="side-nav">
+        <h2>ProManager</h2>
+        <ul>
+          <li>
+            <a href="#" onclick="showView('project-list-view')">My Projects</a>
+          </li>
+          <li>
+            <a href="#" onclick="showView('setup-view')">+ Create Project</a>
+          </li>
+        </ul>
+      </nav>
+
+      <main class="content-area">
+        <div id="project-list-view" class="view">
+          <div class="dashboard-header-container">
+            <div class="header-text-group">
+              <h1>My Projects</h1>
+              <p id="dashboard-instruction" class="header-subtitle">
+                Select a workspace to manage its specific status or drag tasks.
+              </p>
+            </div>
+
+            <button class="btn-primary-large" onclick="showView('setup-view')">
+              + New Project
+            </button>
+          </div>
+          <div id="project-grid" class="project-list-container"></div>
+        </div>
+
+        <div id="setup-view" class="view hidden">
+          <div class="setup-container">
+            <h1>New Project Setup</h1>
+            <div class="input-group">
+              <label for="setup-name">Project Name</label>
+              <input
+                type="text"
+                id="setup-name"
+                placeholder="e.g., Your Project Name"
+              />
+            </div>
+            <div class="input-group">
+              <label for="setup-stages"
+                >Workflow Stages (Comma Separated)</label
+              >
+              <input
+                type="text"
+                id="setup-stages"
+                placeholder="Working, Review, Testing..."
+              />
+              <small
+                >Note: 'New' and 'Completed' are mandatory and added
+                automatically.</small
+              >
+            </div>
+            <button class="btn-primary" onclick="handleCreateProject()">
+              Create Workspace
+            </button>
+          </div>
+        </div>
+
+        <div id="kanban-view" class="view hidden">
+          <div class="board-header">
+            <div class="header-left-group">
+              <button class="btn-close-project" onclick="closeProject()">
+                &larr;
+              </button>
+              <h2 id="active-project-title" onclick="editProjectTitle()">
+                Project Name
+              </h2>
+            </div>
+
+            <div class="search-container">
+              <input
+                type="text"
+                id="task-search-input"
+                placeholder="Search tasks..."
+                onkeyup="applyFilters()"
+              />
+            </div>
+            <div class="toolbar-actions">
+              <select id="filter-priority" onchange="applyFilters()">
+                <option value="all">All Priorities</option>
+                <option value="High">High Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="Low">Low Priority</option>
+              </select>
+
+              <select id="sort-order" onchange="applyFilters()">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="due-soon">Due Date: Soonest</option>
+              </select>
+            </div>
+
+            <div class="btn-container">
+              <button class="btn-add" onclick="openModalForAdd()">
+                + Add Task
+              </button>
+            </div>
+          </div>
+          <div id="kanban-board" class="kanban-board"></div>
+        </div>
+      </main>
+    </div>
+    <div id="task-modal" class="modal hidden">
+      <div class="modal-content">
+        <h3 id="modal-title-text">Project Card Details</h3>
+
+        <div class="modal-body">
+          <input
+            type="text"
+            id="task-title"
+            placeholder="Task Title (Mandatory)"
+            autocomplete="off"
+          />
+
+          <textarea id="task-desc" placeholder="Task Description..."></textarea>
+
+          <input
+            type="text"
+            id="task-tags"
+            placeholder="Tags (e.g. Bug, Frontend, Urgent)"
+            autocomplete="off"
+          />
+
+          <div class="task-meta-inputs">
+            <div class="input-group">
+              <label>Due Date</label>
+              <input type="date" id="task-date" />
+            </div>
+
+            <div class="input-group">
+              <label>Priority</label>
+              <select id="task-priority">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button onclick="closeModal()" class="btn-cancel">Cancel</button>
+          <button class="btn-save" onclick="handleSaveTask()">Save Card</button>
+        </div>
+      </div>
+    </div>
+    <div id="stage-modal" class="modal hidden">
+      <div class="modal-content stage-modal-content">
+        <h3>Add New Stage</h3>
+
+        <input
+          type="text"
+          id="new-stage-name"
+          placeholder="Enter Stage Name"
+          autocomplete="off"
+        />
+
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeStageModal()">Cancel</button>
+
+          <button class="btn-save" onclick="confirmAddStage()">
+            Add Stage
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../JS/projectStatus.js"></script>
+  </body>
+</html>
