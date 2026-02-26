@@ -683,11 +683,31 @@ function confirmAddStage() {
 
   if (!stageName) {
     alert("Stage name cannot be empty!");
-    input.focus(); // Keep focus on input
-    return; // Stop the function here
+    input.focus();
+    return;
   }
-  // Add to project data
-  projects[activeIndex].stages.push(stageName);
+
+  const proj = projects[activeIndex];
+
+  // Find the index of the last column (which is "Completed")
+  const insertIndex = proj.stages.length - 1;
+
+  // 1. SHIFT TASKS: Update the stageIdx for tasks in the "Completed" column
+  // Because "Completed" is moving one spot to the right, its tasks must move with it.
+  proj.tasks.forEach((task) => {
+    if (task.stageIdx >= insertIndex) {
+      task.stageIdx++;
+    }
+  });
+
+  // 2. INSERT STAGE NAME: Insert the new stage just before the last one
+  // splice(index, howManyToRemove, itemToAdd)
+  proj.stages.splice(insertIndex, 0, stageName);
+
+  // 3. INSERT LIMIT: Keep the limits array perfectly in sync
+  if (proj.limits) {
+    proj.limits.splice(insertIndex, 0, 0); // 0 means unlimited
+  }
 
   saveData();
   renderBoard();
@@ -939,31 +959,32 @@ function handleDrop(ev) {
   // --- CASE 2: TASK DROPPING ---
   const taskId = ev.dataTransfer.getData("text");
 
-  // Bubble up to find the drop-zone
-  while (target && !target.classList.contains("drop-zone")) {
-    target = target.parentElement;
-  }
+  // 1. Find the main column wrapper we dropped into
+  const columnElement = ev.target.closest(".status-column");
 
-  if (target) {
-    target.classList.remove("drag-over");
+  if (columnElement) {
+    // 2. Find the actual drop-zone inside this specific column
+    const targetZone = columnElement.querySelector(".drop-zone");
 
-    // Get the index of the column we are dropping into
-    const newIdx = parseInt(target.id.split("-")[1]);
-    const task = projects[activeIndex].tasks.find((t) => t.id == taskId);
+    if (targetZone) {
+      targetZone.classList.remove("drag-over");
 
-    if (task) {
-      // CHECK LIMIT BEFORE MOVING
-      // We only care if we are moving to a DIFFERENT column
-      if (task.stageIdx !== newIdx) {
-        // If validation fails (returns false), stop the drop
-        if (!checkStageLimit(newIdx)) return;
+      // Get the index of the column we are dropping into
+      const newIdx = parseInt(targetZone.id.split("-")[1]);
+      const task = projects[activeIndex].tasks.find((t) => t.id == taskId);
+
+      if (task) {
+        // CHECK LIMIT BEFORE MOVING
+        if (task.stageIdx !== newIdx) {
+          if (!checkStageLimit(newIdx)) return;
+        }
+
+        // Update and Save
+        task.stageIdx = newIdx;
+        updateTimestamp();
+        saveData();
+        renderBoard();
       }
-
-      // If we passed validation, update the task
-      task.stageIdx = newIdx;
-      updateTimestamp();
-      saveData();
-      renderBoard();
     }
   }
 }

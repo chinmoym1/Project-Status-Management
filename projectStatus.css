@@ -766,7 +766,9 @@
   
   /* Task Styling & Dragging */
   .drop-zone {
-    min-height: 400px;
+    flex-grow: 1;
+    min-height: 80px;
+    padding-bottom: 15px;
     border-radius: 10px;
     transition: 0.2s;
   }
